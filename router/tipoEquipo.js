@@ -5,24 +5,26 @@ const tipoEquipo = require('../models/TipoEquipo');
 
 router.get('/', async function(req, res){
     try{
-        const tipoEquipo = await TipoEquipo.find().populate([
-            {
-                path: 'nombre'
-            },
-            {
-                path: 'estado'
-            },
-            {
-                path:'fechaCreacion'
-            },
-            {
-                path:'fechaCreacion'
-            }
-        ]);
+        const tipoEquipo = await TipoEquipo.find();
         res.send(tipoEquipo);
     }catch(error){
         console.log(error);
         res.send('Ocurrio un error al consultar tipo de equipo');
+    }
+})
+
+router.get('/:tipoEquipoId', async(req, res)=>{
+
+    try{
+        const {tipoEquipoId} = req.params;
+
+        const response = await TipoEquipo.findById({_id: tipoEquipoId});
+
+        console.log(response)
+        res.status(200).send(response);
+    } catch(error){
+        console.log("Error!: ", error.message)
+        res.status(500).send(error.message);
     }
 })
 
@@ -82,5 +84,25 @@ router.put('/:tipoEquipoId', async function(req, res){
     }
     
 });
+
+router.delete('/:tipoEquipoId', async function(req, res){
+    try{
+        console.log('Borrar tipo equipo', req.params.id);
+        const {tipoEquipoId} = req.params;
+
+        const existeTipoEquipo = await TipoEquipo.findById({_id: tipoEquipoId});
+
+        if(!existeTipoEquipo){
+            return res.send('Tipo de equipo no existe');
+        }
+
+        const response = await existeTipoEquipo.remove();
+        res.status(200).send(response);
+
+    } catch(error){
+        console.log(error);
+        res.send('Ocurrio un error al borrar tipo equipo');
+    }
+})
 
 module.exports = router;

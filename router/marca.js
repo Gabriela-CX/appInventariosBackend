@@ -5,24 +5,26 @@ const marca = require('../models/Marca');
 
 router.get('/', async function(req, res){
     try{
-        const marca = await Marca.find().populate([
-            {
-                path: 'nombre'
-            },
-            {
-                path: 'estado'
-            },
-            {
-                path:'fechaCreacion'
-            },
-            {
-                path:'fechaCreacion'
-            }
-        ]);
+        const marca = await Marca.find();
         res.send(marca);
     }catch(error){
         console.log(error);
         res.send('Ocurrio un error al consultar marca');
+    }
+})
+
+router.get('/:marcaId', async(req, res)=>{
+
+    try{
+        const {marcaId} = req.params;
+
+        const response = await Marca.findById({_id: marcaId});
+
+        console.log(response)
+        res.status(200).send(response);
+    } catch(error){
+        console.log("Error!: ", error.message)
+        res.status(500).send(error.message);
     }
 })
 
@@ -82,5 +84,25 @@ router.put('/:marcaId', async function(req, res){
     }
     
 });
+
+router.delete('/:marcaId', async function(req, res){
+    try{
+        console.log('Borrar marca', req.params.id);
+        const {marcaId} = req.params;
+
+        const existeMarca = await Marca.findById({_id: marcaId});
+
+        if(!existeMarca){
+            return res.send('Marca no existe');
+        }
+
+        const response = await existeMarca.remove();
+        res.status(200).send(response);
+
+    } catch(error){
+        console.log(error);
+        res.send('Ocurrio un error al borrar marca');
+    }
+})
 
 module.exports = router;

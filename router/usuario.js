@@ -38,27 +38,27 @@ router.post('/', async function(req, res){
 //Read Usuario
 router.get('/', async function(req, res){
     try{
-        const usuario = await Usuario.find().populate([
-            {
-                path: 'nombre'
-            },
-            {
-                path: 'email'
-            },
-            {
-                path: 'estado'
-            },
-            {
-                path:'fechaCreacion'
-            },
-            {
-                path:'fechaCreacion'
-            }
-        ]);
+        const usuario = await Usuario.find();
         res.send(usuario);
     }catch(error){
         console.log(error);
         res.send('Ocurrio un error al consultar usuario');
+    }
+})
+
+//Get by Id Usuario
+router.get('/:usuarioId', async(req, res)=>{
+
+    try{
+        const {usuarioId} = req.params;
+
+        const response = await Usuario.findById({_id: usuarioId});
+
+        console.log(response)
+        res.status(200).send(response);
+    } catch(error){
+        console.log("Error!: ", error.message)
+        res.status(500).send(error.message);
     }
 })
 
@@ -96,18 +96,18 @@ router.put('/:usuarioId', async function(req, res){
 });
 
 //Delete Usuario
-router.delete('/', async function(req, res){
+router.delete('/:usuarioId', async function(req, res){
     try{
         console.log('Borrar usuario', req.params.id);
-        const {id} = req.params;
+        const {usuarioId} = req.params;
 
-        const usuarioExiste = await Usuario.findById({_id: id});
+        const usuarioExiste = await Usuario.findById({_id: usuarioId});
 
         if(!usuarioExiste){
             return res.send('Usuario no existe');
         }
 
-        const response = await inventarioExiste.remove();
+        const response = await usuarioExiste.remove();
         res.status(200).send(response);
 
     } catch(error){
