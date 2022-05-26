@@ -45,7 +45,7 @@ router.post('/', async function(req, res){
     try{
         const existeInventarioPorSerial = await Inventario.findOne({serial: req.body.serial});
         if (existeInventarioPorSerial){
-            return res.status(400).send('Ya existe el serial para otro equipo');
+            return res.send('Ya existe el serial para otro equipo');
         }
 
         let inventario = new Inventario();
@@ -56,10 +56,10 @@ router.post('/', async function(req, res){
         inventario.color = req.body.color;
         inventario.fechaCompra = req.body.fechaCompra;
         inventario.precio = req.body.precio;
-        inventario.usuario = req.body.usuario._id;
-        inventario.marca = req.body.marca._id;
-        inventario.tipoEquipo = req.body.tipoEquipo._id;
-        inventario.estadoEquipo = req.body.estadoEquipo._id;
+        inventario.usuario = req.body.usuario;
+        inventario.marca = req.body.marca;
+        inventario.tipoEquipo = req.body.tipoEquipo;
+        inventario.estadoEquipo = req.body.estadoEquipo;
         inventario.fechaCreacion = new Date();
         inventario.fechaActualizacion = new Date();
 
@@ -68,7 +68,7 @@ router.post('/', async function(req, res){
         res.send(inventario);
     }catch(error){
         console.log(error);
-        res.status(500).send('Ocurrio un error al subir inventarios');
+        res.send('Ocurrio un error al subir inventarios');
     }
 })
 
