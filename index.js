@@ -2,12 +2,14 @@ const express = require('express');
 const dotenv = require('dotenv').config();
 const app = express();
 const port = process.env.PORT;
+const cors = require('cors');
 const {getConnection} = require('./db/db-connection-mongo');
 
 getConnection();
 
 //Parseo JSON
 app.use(express.json());
+app.use(cors());
 
 app.use('/usuario', require('./router/usuario'));
 app.use('/estado-equipo', require('./router/estadoEquipo'));
